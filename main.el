@@ -2,9 +2,10 @@
 ;; Basic functionality.
 ;;============================================================
 
-(defvar platform "mac")
+(defvar platform "win")
 
 (defun is-mac () (string= platform "mac"))
+(defun is-win () (string= platform "win"))
 (defun is-linux () (string= platform "linux"))
 
 (if (is-mac) (setq ns-command-modifier (quote meta)))
@@ -36,7 +37,7 @@
               (interactive)
               (other-window -1)))
 (global-set-key (kbd "C-S-l") 'other-window)
-(global-set-key (kbd "C-S-j") '(lambda ()
+(global-set-key (kbd "C-S-h") '(lambda ()
               (interactive)
               (other-window -1)))
 (global-set-key "\M-p" 'backward-kill-word)
@@ -94,6 +95,8 @@
 ;; Nice mac font
 (if (is-mac)
     (set-default-font "Monaco-12"))
+(if (is-win)
+    (set-default-font "Consolas-10"))
 
 
 ;;================================================================================
@@ -105,8 +108,8 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-(add-to-list 'package-archives
-	     '("marmalade" . "http://marmalade-repo.org/packages/"))
+;(add-to-list 'package-archives
+;	     '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (package-initialize)
 
@@ -114,21 +117,17 @@
 ;ack-and-a-half
 ;auto-complete
 ;autopair
-;cmake-mode
 ;color-theme
 ;color-theme-sol...
 ;column-marker
 ;evil-nerd-comme...
 ;evil-numbers
-;ido-better-flex
 ;ido-ubiquitous
 ;lua-mode
 ;popup
-;python-mode
 ;yasnippet
 
 
-(ido-better-flex/enable)
 (require 'auto-complete-config)
 (ac-config-default)
 
@@ -158,9 +157,8 @@
 
 ;; ==== C++
 
-(load-file "~/emacs/my-cpp.el")
-(load-file "~/emacs/my-python.el")
-
+;(load-file "~/emacs-config/my-cpp.el")
+;(load-file "~/emacs-config/my-python.el")
 
 ;; Vim envy
 (global-set-key "\M-;" 'evilnc-comment-or-uncomment-lines)
