@@ -91,8 +91,17 @@
               (get-buffer-create "*compilation*"))
            (shell-command my-working-command (get-buffer-create "*program-output*"))))))
 
+;; Place backups somewhere I can't see them...
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+    '(("." . "~/.saves"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)
 
-;; Nice mac font
+;; Nice fonts
 (if (is-mac)
     (set-default-font "Monaco-12"))
 (if (is-win)
@@ -143,8 +152,8 @@
   (color-theme-solarized-light))
 
 (require 'yasnippet)
-(setq yas-snippet-dirs "~/emacs/snippets")
-(yas-load-directory "~/emacs/snippets")
+(setq yas-snippet-dirs "~/emacs-config/snippets")
+(yas-load-directory "~/emacs-config/snippets")
 (yas-global-mode 1)
 
 (require 'ack-and-a-half)
