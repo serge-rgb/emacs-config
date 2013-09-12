@@ -54,7 +54,7 @@
   (select-window (get-buffer-window "*Tags List*"))
   (local-set-key [return] '(lambda () (interactive) (find-tag (thing-at-point 'symbol))))
   (isearch-forward))
-(global-set-key (kbd "C-c l") 'local-tags) 
+(global-set-key (kbd "C-c l") 'local-tags)
 
 (defun find-todos-in-buffers (regexp)
   (interactive "MBuffers matching regexp: ")
@@ -157,7 +157,7 @@
 
 ;; ==== C++
 
-;(load-file "~/emacs-config/my-cpp.el")
+(load-file "~/emacs-config/my-cpp.el")
 ;(load-file "~/emacs-config/my-python.el")
 
 ;; Vim envy

@@ -1,6 +1,6 @@
 
 ;; File with some semantic helper funcs
-(load-file "~/emacs/eassist.el")
+(load-file "~/emacs-config/eassist.el")
 
 ;; .h -> c++ not c
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
@@ -22,24 +22,7 @@
                (c-offsets-alist
                 (innamespace . 0))))
 
-(add-to-list 'load-path "~/emacs/emacs-clang-complete-async")
-(require 'auto-complete-clang-async)
 
-(defun ac-cc-mode-setup ()
-  (setq ac-clang-complete-executable "~/emacs/emacs-clang-complete-async/clang-complete")
-  ;(setq ac-sources '(ac-source-abbrev ac-source-words-in-same-mode-buffers ac-source-gtags ac-source-clang-async))
-  ;(setq ac-sources (append '(ac-source-clang-async) ac-sources))
-  (setq ac-sources '(ac-source-clang-async))
-  (ac-clang-launch-completion-process))
-
-(defun my-ac-config ()
-  (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
-  (add-hook 'auto-complete-mode-hook 'ac-common-setup)
-  (global-auto-complete-mode t))
-
-(my-ac-config)
-
-;; Semantic path for c++ stl
 (defun my-c-hook ()
   (interactive)
 
