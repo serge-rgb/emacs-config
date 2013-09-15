@@ -172,8 +172,8 @@
 ;; Vim envy
 (global-set-key "\M-;" 'evilnc-comment-or-uncomment-lines)
 (global-set-key "\M-:" 'evilnc-comment-or-uncomment-to-the-line)
-(global-set-key (kbd "C-c +") 'evil-numbers/inc-at-pt)
-(global-set-key (kbd "C-c -") 'evil-numbers/dec-at-pt)
+(global-set-key (kbd "C-c -") 'evil-numbers/inc-at-pt)
+(global-set-key (kbd "C-c +") 'evil-numbers/dec-at-pt)
 
 ;; Trailing whitespace
 (add-hook 'before-save-hook (lambda () (delete-trailing-whitespace)))
