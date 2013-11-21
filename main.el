@@ -1,4 +1,4 @@
-;============================================================
+;;============================================================
 ;; Basic functionality.
 ;;============================================================
 
@@ -134,6 +134,7 @@
 ;ido-ubiquitous
 ;lua-mode
 ;popup
+;slime (ac-slime)
 ;yasnippet
 
 
@@ -147,9 +148,14 @@
 (color-theme-initialize)
 (setq solarized-bold nil) ;; I think this makes it faster.
 ;; Select theme based on the time of day.
-(if (>= (string-to-int (first (split-string (nth 3 (split-string (current-time-string) " ")) ":"))) 19)
-    (color-theme-solarized-dark)
-  (color-theme-solarized-light))
+(let ((hour (string-to-int (first (split-string (nth 3 (split-string (current-time-string) " ")) ":")))))
+  (message (int-to-string hour))
+  (if (or (>=
+           hour 20)
+          (<=
+           hour 8))
+      (color-theme-solarized-dark)
+    (color-theme-solarized-light)))
 
 (require 'yasnippet)
 (setq yas-snippet-dirs "~/emacs-config/snippets")
@@ -168,6 +174,25 @@
 
 (load-file "~/emacs-config/my-cpp.el")
 ;(load-file "~/emacs-config/my-python.el")
+
+; ==== Slime
+(setq slime-lisp-implementation '((sbcl ("sbcl"))))
+(setq slime-default-lisp "sbcl")
+(setq inferior-lisp-program "sbcl")
+(setq slime-auto-connect 'ask)
+(add-hook 'slime-mode-hook 'set-up-slime-ac)
+(add-hook 'comint-mode-hook 'set-up-slime-ac)
+(add-hook 'comint-mode-hook 'auto-complete-mode)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'slime-repl-mode))
+(defvar slime-setup-done nil)
+(defun slime-setup-once ()
+  (unless slime-setup-done
+    (require 'slime)
+    (slime-setup)
+    (setq slime-setup-done t)))
+(defadvice lisp-mode (before slime-setup-once activate)
+  (slime-setup-once))
 
 ;; Vim envy
 (global-set-key "\M-;" 'evilnc-comment-or-uncomment-lines)

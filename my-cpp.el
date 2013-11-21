@@ -44,7 +44,7 @@
   (setq whitespace-style '(face lines-tail))
   (whitespace-mode t)
   (require 'column-marker)
-  (column-marker-1 80)
+  (column-marker-1 95)
   (column-marker-2 100)
   ;; compile
   (define-key c-mode-base-map [C-f5] 'compile)
