@@ -11,10 +11,10 @@
 (if (is-mac) (setq ns-command-modifier (quote meta)))
 
 (server-start)
-(ido-mode t)                                             ;; Best. Thing. Ever.
-(setq ido-enable-flex-matching t)                        ;; Cool completion for ido
 (setq completion-styles '(partial-completion initials))
 (setq completion-pcm-complete-word-inserts-delimiters t)
+(global-set-key (kbd "M-o") 'find-file)
+(global-set-key (kbd "C-3") 'switch-to-buffer)
 (tool-bar-mode 0)                                        ;; Disable ugly toolbar
 (setq use-file-dialog nil)                               ;; No GUI file dialogs
 (setq inhibit-startup-message t)                         ;; No emacs logo
@@ -163,14 +163,21 @@
 (yas-load-directory "~/emacs-config/snippets")
 (yas-global-mode 1)
 
+;; ======= ack
 (require 'ack-and-a-half)
 ;; Create shorter aliases
 (defalias 'ack 'ack-and-a-half)
 (defalias 'ack-same 'ack-and-a-half-same)
-
 (defalias 'ack-find-file 'ack-and-a-half-find-file)
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
 (setq ack-and-a-half-executable "/usr/local/bin/ack")
+
+;; ======= helm
+(helm-mode 1)
+
+
+;; ======= magit
+(global-set-key (kbd "C-c C-v") 'magit-status)
 
 ;; ======== Ace jump mode
 (autoload
