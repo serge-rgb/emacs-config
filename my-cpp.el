@@ -22,7 +22,6 @@
                (c-offsets-alist
                 (innamespace . 0))))
 
-
 (defun my-c-hook ()
   (interactive)
 
@@ -30,7 +29,7 @@
 
   ;; Semantic stuff
   (semantic-mode t)
-  (global-semantic-decoration-mode t)
+  ;; (global-semantic-decoration-mode t)
   (define-key c-mode-base-map [C-tab] 'eassist-switch-h-cpp)
   (define-key c-mode-base-map (kbd "C-c l") 'eassist-list-methods)
 ;  (if linux

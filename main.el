@@ -2,7 +2,7 @@
 ;; Basic functionality.
 ;;============================================================
 
-(defvar platform "win")
+(defvar platform "mac")
 
 (defun is-mac () (string= platform "mac"))
 (defun is-win () (string= platform "win"))
@@ -11,25 +11,25 @@
 (if (is-mac) (setq ns-command-modifier (quote meta)))
 
 (server-start)
-(ido-mode t)                                           ;; Best. Thing. Ever.
-(setq ido-enable-flex-matching t)                      ;; Cool completion for ido
+(ido-mode t)                                             ;; Best. Thing. Ever.
+(setq ido-enable-flex-matching t)                        ;; Cool completion for ido
 (setq completion-styles '(partial-completion initials))
 (setq completion-pcm-complete-word-inserts-delimiters t)
-(tool-bar-mode 0)                                      ;; Disable ugly toolbar
-(setq use-file-dialog nil)                             ;; No GUI file dialogs
-(setq inhibit-startup-message t)                       ;; No emacs logo
-(setq tags-revert-without-query 1)                     ;; Auto-load tags file
-(winner-mode t)                                        ;; Undo window mess-ups
-(global-set-key (kbd "M-o") 'ido-find-file)            ;; Better find-file
-(global-set-key (kbd "M-s") 'save-buffer)              ;; Better save buffer
-(global-set-key (kbd "C-3") 'ido-switch-buffer)        ;; Switch buffers easily
-(global-set-key "\C-m" 'newline-and-indent)            ;; Always auto-indent
-(global-set-key "\C-x\C-m" 'execute-extended-command)  ;; Better than M-x
-(show-paren-mode 1)                                    ;; I like highlighted parens
-(fset 'yes-or-no-p 'y-or-n-p)                          ;; quick prompt for 'yes or no'
-(put 'scroll-left 'disabled nil)                       ;; Scrolling right-left
-(transient-mark-mode t)                                ;; Show regions with color
-(global-linum-mode t)                                  ;; Show line numbers
+(tool-bar-mode 0)                                        ;; Disable ugly toolbar
+(setq use-file-dialog nil)                               ;; No GUI file dialogs
+(setq inhibit-startup-message t)                         ;; No emacs logo
+(setq tags-revert-without-query 1)                       ;; Auto-load tags file
+(winner-mode t)                                          ;; Undo window mess-ups
+(global-set-key (kbd "M-o") 'ido-find-file)              ;; Better find-file
+(global-set-key (kbd "M-s") 'save-buffer)                ;; Better save buffer
+(global-set-key (kbd "C-3") 'ido-switch-buffer)          ;; Switch buffers easily
+(global-set-key "\C-m" 'newline-and-indent)              ;; Always auto-indent
+(global-set-key "\C-x\C-m" 'execute-extended-command)    ;; Better than M-x
+(show-paren-mode 1)                                      ;; I like highlighted parens
+(fset 'yes-or-no-p 'y-or-n-p)                            ;; quick prompt for 'yes or no'
+(put 'scroll-left 'disabled nil)                         ;; Scrolling right-left
+(transient-mark-mode t)                                  ;; Show regions with color
+(global-linum-mode t)                                    ;; Show line numbers
 
 ;;Switch windows easily. C-x o is too much work.
 (global-set-key "\M-+" 'other-window)
@@ -47,6 +47,7 @@
 (global-set-key (kbd "C-}") '(lambda () (interactive) (enlarge-window-horizontally 5)))
 (global-set-key (kbd "C-M-{") '(lambda () (interactive) (shrink-window 2)))
 (global-set-key (kbd "C-M-}") '(lambda () (interactive) (enlarge-window 2)))
+
 ;; List functions
 (defun local-tags ()
   (interactive)
@@ -103,7 +104,7 @@
 
 ;; Nice fonts
 (if (is-mac)
-    (set-default-font "Monaco-12"))
+    (set-default-font "Monaco-10"))
 (if (is-win)
     (set-default-font "Consolas-10"))
 
@@ -122,21 +123,17 @@
 
 (package-initialize)
 
-; Installed packages:
-;ack-and-a-half
-;auto-complete
-;autopair
-;color-theme
-;color-theme-sol...
-;column-marker
-;evil-nerd-comme...
-;evil-numbers
-;ido-ubiquitous
-;lua-mode
-;popup
-;slime (ac-slime)
-;yasnippet
+;; The power of the dark side...
+(evil-mode)
+;; jj to escape
+(require 'key-chord)
+(key-chord-mode 1)
+(key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
 
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C-;") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-:") 'mc/mark-previous-like-this)
 
 (require 'auto-complete-config)
 (ac-config-default)
@@ -148,8 +145,8 @@
 (color-theme-initialize)
 (setq solarized-bold nil) ;; I think this makes it faster.
 ;; Select theme based on the time of day.
-(let ((hour (string-to-int (first (split-string (nth 3 (split-string (current-time-string) " ")) ":")))))
-  (message (int-to-string hour))
+(let ((hour (string-to-int (first (split-string (nth 4 (split-string (current-time-string) " ")) ":")))))
+  (message (concat "Hour: " (int-to-string hour)))
   (if (or (>=
            hour 20)
           (<=
@@ -166,19 +163,38 @@
 ;; Create shorter aliases
 (defalias 'ack 'ack-and-a-half)
 (defalias 'ack-same 'ack-and-a-half-same)
+
 (defalias 'ack-find-file 'ack-and-a-half-find-file)
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
 (setq ack-and-a-half-executable "/usr/local/bin/ack")
 
-;; ==== C++
+;; ======== Ace jump mode
+(autoload
+  'ace-jump-mode-pop-mark
+  "ace-jump-mode"
+  "Ace jump back:-)"
+  t)
+(eval-after-load "ace-jump-mode"
+  '(ace-jump-mode-enable-mark-sync))
 
+(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+
+;; ==== C++
 (load-file "~/emacs-config/my-cpp.el")
 ;(load-file "~/emacs-config/my-python.el")
 
 ; ==== Slime
-(setq slime-lisp-implementation '((sbcl ("sbcl"))))
-(setq slime-default-lisp "sbcl")
-(setq inferior-lisp-program "sbcl")
+(cond
+ ((is-mac) (progn
+             (setq slime-lisp-implementation '((sbcl ("/usr/local/bin/sbcl"))))
+             (setq inferior-lisp-program "/usr/local/bin/sbcl")
+             ))
+ ((is-linux) (setq slime-lisp-implementation '((sbcl ("sbcl"))))))
+
+;;(setq slime-default-lisp "sbcl")
+;;(setq inferior-lisp-program "sbcl")
+
 (setq slime-auto-connect 'ask)
 (add-hook 'slime-mode-hook 'set-up-slime-ac)
 (add-hook 'comint-mode-hook 'set-up-slime-ac)
@@ -193,7 +209,6 @@
     (setq slime-setup-done t)))
 (defadvice lisp-mode (before slime-setup-once activate)
   (slime-setup-once))
-
 ;; Vim envy
 (global-set-key "\M-;" 'evilnc-comment-or-uncomment-lines)
 (global-set-key "\M-:" 'evilnc-comment-or-uncomment-to-the-line)
