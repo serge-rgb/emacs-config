@@ -31,6 +31,10 @@
 (transient-mark-mode t)                                  ;; Show regions with color
 (global-linum-mode t)                                    ;; Show line numbers
 
+;; Decent starting frame size:
+
+(when window-system (set-frame-size (selected-frame) 180 54))
+
 ;;Switch windows easily. C-x o is too much work.
 (global-set-key "\M-+" 'other-window)
 (global-set-key "\M-_" '(lambda ()
@@ -181,7 +185,7 @@
 (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
 
 (load-file "~/emacs-config/evil-surround/surround.el")
-(require 'evil-surround)
+(require 'surround)
 (global-surround-mode t)
 
 ;; ==== C++
