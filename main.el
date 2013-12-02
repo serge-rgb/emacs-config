@@ -180,6 +180,10 @@
 (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
 
+(load-file "~/emacs-config/evil-surround/surround.el")
+(require 'evil-surround)
+(global-surround-mode t)
+
 ;; ==== C++
 (load-file "~/emacs-config/my-cpp.el")
 ;(load-file "~/emacs-config/my-python.el")
