@@ -15,6 +15,7 @@
 (setq completion-pcm-complete-word-inserts-delimiters t)
 (global-set-key (kbd "M-o") 'find-file)
 (global-set-key (kbd "C-3") 'switch-to-buffer)
+(set-frame-parameter (selected-frame) 'alpha '(98 100))  ;; Transparency
 (tool-bar-mode 0)                                        ;; Disable ugly toolbar
 (setq use-file-dialog nil)                               ;; No GUI file dialogs
 (setq inhibit-startup-message t)                         ;; No emacs logo
@@ -147,16 +148,18 @@
 (setq autopair-autowrap t)
 
 (color-theme-initialize)
-(setq solarized-bold nil) ;; I think this makes it faster.
-;; Select theme based on the time of day.
-(let ((hour (string-to-int (first (split-string (nth 4 (split-string (current-time-string) " ")) ":")))))
-  (message (concat "Hour: " (int-to-string hour)))
-  (if (or (>=
-           hour 20)
-          (<=
-           hour 8))
-      (color-theme-solarized-dark)
-    (color-theme-solarized-light)))
+
+(require 'monokai-theme)
+;; (setq solarized-bold nil) ;; I think this makes it faster.
+;; ;; Select theme based on the time of day.
+;; (let ((hour (string-to-int (first (split-string (nth 4 (split-string (current-time-string) " ")) ":")))))
+;;   (message (concat "Hour: " (int-to-string hour)))
+;;   (if (or (>=
+;;            hour 20)
+;;           (<=
+;;            hour 8))
+;;       (color-theme-solarized-dark)
+;;     (color-theme-solarized-light)))
 
 (require 'yasnippet)
 (setq yas-snippet-dirs "~/emacs-config/snippets")
