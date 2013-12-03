@@ -13,8 +13,6 @@
 (server-start)
 (setq completion-styles '(partial-completion initials))
 (setq completion-pcm-complete-word-inserts-delimiters t)
-(global-set-key (kbd "M-o") 'find-file)
-(global-set-key (kbd "C-3") 'switch-to-buffer)
 (set-frame-parameter (selected-frame) 'alpha '(98 100))  ;; Transparency
 (tool-bar-mode 0)                                        ;; Disable ugly toolbar
 (setq use-file-dialog nil)                               ;; No GUI file dialogs
@@ -177,6 +175,8 @@
 
 ;; ======= helm
 (helm-mode 1)
+(global-set-key (kbd "M-o") 'find-file)
+(global-set-key (kbd "C-3") 'switch-to-buffer)
 
 
 ;; ======= magit
