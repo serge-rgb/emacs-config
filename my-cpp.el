@@ -37,9 +37,9 @@
 
   (autopair-mode t)
 
-  ;;-- 80 char rule
+  ;;-- N char rule
   (require 'whitespace)
-  (setq whitespace-line-column 80)
+  (setq whitespace-line-column 100)
   (setq whitespace-style '(face lines-tail))
   (whitespace-mode t)
   (require 'column-marker)

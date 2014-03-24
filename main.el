@@ -1,4 +1,4 @@
-;;============================================================
+;============================================================
 ;; Basic functionality.
 ;;============================================================
 
@@ -13,7 +13,7 @@
 (server-start)
 (setq completion-styles '(partial-completion initials))
 (setq completion-pcm-complete-word-inserts-delimiters t)
-(set-frame-parameter (selected-frame) 'alpha '(98 100))  ;; Transparency
+(set-frame-parameter (selected-frame) 'alpha '(97 100))  ;; Transparency
 (tool-bar-mode 0)                                        ;; Disable ugly toolbar
 (setq use-file-dialog nil)                               ;; No GUI file dialogs
 (setq inhibit-startup-message t)                         ;; No emacs logo
@@ -29,6 +29,10 @@
 (put 'scroll-left 'disabled nil)                         ;; Scrolling right-left
 (transient-mark-mode t)                                  ;; Show regions with color
 (global-linum-mode t)                                    ;; Show line numbers
+(global-set-key (kbd "C-c a") 'org-agenda)
+(setq visible-bell t)                                    ;; Visible bell
+(setq ring-bell-function '(lambda ()))
+
 
 ;; Decent starting frame size:
 
@@ -111,7 +115,6 @@
 (if (is-win)
     (set-default-font "Consolas-10"))
 
-
 ;;================================================================================
 ;; Packages
 ;;================================================================================
@@ -121,10 +124,14 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-;(add-to-list 'package-archives
-;	     '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+	     '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (package-initialize)
+
+;; home bin dir
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
 
 ;; The power of the dark side...
 (evil-mode)
@@ -132,33 +139,52 @@
 (require 'key-chord)
 (key-chord-mode 1)
 (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+(load-file "~/emacs-config/evil-surround/surround.el")
+(global-set-key "\M-;" 'evilnc-comment-or-uncomment-lines)
+(global-set-key "\M-:" 'evilnc-comment-or-uncomment-to-the-line)
+(global-set-key (kbd "C-c -") 'evil-numbers/inc-at-pt)
+(global-set-key (kbd "C-c +") 'evil-numbers/dec-at-pt)
+(require 'surround)
+(global-surround-mode t)
 
 (require 'multiple-cursors)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C-;") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-:") 'mc/mark-previous-like-this)
+;; ======== Ace jump mode
+(autoload
+  'ace-jump-mode-pop-mark
+  "ace-jump-mode"
+  "Ace jump back:-)"
+  t)
+(eval-after-load "ace-jump-mode"
+  '(ace-jump-mode-enable-mark-sync))
 
-(require 'auto-complete-config)
-(ac-config-default)
+(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+
+;(require 'auto-complete-config)
+;(ac-config-default)
 
 (require 'autopair)
 (autopair-global-mode t)
 (setq autopair-autowrap t)
 
-(color-theme-initialize)
+;; (color-theme-initialize)
 
-(require 'monokai-theme)
+;; (require 'monokai-theme)
 ;; (setq solarized-bold nil) ;; I think this makes it faster.
 ;; ;; Select theme based on the time of day.
 ;; (let ((hour (string-to-int (first (split-string (nth 4 (split-string (current-time-string) " ")) ":")))))
 ;;   (message (concat "Hour: " (int-to-string hour)))
 ;;   (if (or (>=
-;;            hour 20)
+;;            hour 18)
 ;;           (<=
 ;;            hour 8))
-;;       (color-theme-solarized-dark)
-;;     (color-theme-solarized-light)))
+;;     (load-theme 'solarized-dark)
+;;     (load-theme 'solarized-light)))
 
+;; ======== yasnippet
 (require 'yasnippet)
 (setq yas-snippet-dirs "~/emacs-config/snippets")
 (yas-load-directory "~/emacs-config/snippets")
@@ -178,60 +204,51 @@
 (global-set-key (kbd "M-o") 'find-file)
 (global-set-key (kbd "C-3") 'switch-to-buffer)
 
-
 ;; ======= magit
 (global-set-key (kbd "C-c C-v") 'magit-status)
 
-;; ======== Ace jump mode
-(autoload
-  'ace-jump-mode-pop-mark
-  "ace-jump-mode"
-  "Ace jump back:-)"
-  t)
-(eval-after-load "ace-jump-mode"
-  '(ace-jump-mode-enable-mark-sync))
-
-(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
-(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
-
-(load-file "~/emacs-config/evil-surround/surround.el")
-(require 'surround)
-(global-surround-mode t)
-
 ;; ==== C++
-(load-file "~/emacs-config/my-cpp.el")
+; (load-file "~/emacs-config/my-cpp.el")
+
+;; ==== Python
 ;(load-file "~/emacs-config/my-python.el")
 
 ; ==== Slime
 (cond
  ((is-mac) (progn
              (setq slime-lisp-implementation '((sbcl ("/usr/local/bin/sbcl"))))
-             (setq inferior-lisp-program "/usr/local/bin/sbcl")
-             ))
+             (setq inferior-lisp-program "/usr/local/bin/sbcl")))
  ((is-linux) (setq slime-lisp-implementation '((sbcl ("sbcl"))))))
+
+; ==== Clojure
+
 
 ;;(setq slime-default-lisp "sbcl")
 ;;(setq inferior-lisp-program "sbcl")
 
-(setq slime-auto-connect 'ask)
-(add-hook 'slime-mode-hook 'set-up-slime-ac)
-(add-hook 'comint-mode-hook 'set-up-slime-ac)
-(add-hook 'comint-mode-hook 'auto-complete-mode)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'slime-repl-mode))
-(defvar slime-setup-done nil)
-(defun slime-setup-once ()
-  (unless slime-setup-done
-    (require 'slime)
-    (slime-setup)
-    (setq slime-setup-done t)))
-(defadvice lisp-mode (before slime-setup-once activate)
-  (slime-setup-once))
-;; Vim envy
-(global-set-key "\M-;" 'evilnc-comment-or-uncomment-lines)
-(global-set-key "\M-:" 'evilnc-comment-or-uncomment-to-the-line)
-(global-set-key (kbd "C-c -") 'evil-numbers/inc-at-pt)
-(global-set-key (kbd "C-c +") 'evil-numbers/dec-at-pt)
+;;(setq slime-auto-connect 'ask)
+;;(add-hook 'slime-mode-hook 'set-up-slime-ac)
+;;(add-hook 'comint-mode-hook 'set-up-slime-ac)
+;;(add-hook 'comint-mode-hook 'auto-complete-mode)
+;;(eval-after-load "auto-complete"
+;;  '(add-to-list 'ac-modes 'slime-repl-mode))
+;;(defvar slime-setup-done nil)
+;;(defun slime-setup-once ()
+;;  (unless slime-setup-done
+;;    (require 'slime)
+;;    (slime-setup)
+;;    (setq slime-setup-done t)))
+;;(defadvice lisp-mode (before slime-setup-once activate)
+;;  (slime-setup-once))
+
+;;(define-key lisp-mode-map (kbd "C-M-u") '(lambda ()
+;;                                           (interactive)
+;;                                            (progn
+;;                                              (backward-up-list)
+;;                                              (forward-sexp 1))))
 
 ;; Trailing whitespace
 (add-hook 'before-save-hook (lambda () (delete-trailing-whitespace)))
+
+(global-company-mode t)
+(setq company-idle-delay t)
