@@ -2,7 +2,7 @@
 ;; Basic functionality.
 ;;============================================================
 
-(defvar platform "mac")
+(defvar platform "linux")
 
 (defun is-mac () (string= platform "mac"))
 (defun is-win () (string= platform "win"))
@@ -13,7 +13,8 @@
 (server-start)
 (setq completion-styles '(partial-completion initials))
 (setq completion-pcm-complete-word-inserts-delimiters t)
-(set-frame-parameter (selected-frame) 'alpha '(97 100))  ;; Transparency
+(ido-ubiquitous-mode t)
+(set-frame-parameter (selected-frame) 'alpha '(98 100))  ;; Transparency
 (tool-bar-mode 0)                                        ;; Disable ugly toolbar
 (setq use-file-dialog nil)                               ;; No GUI file dialogs
 (setq inhibit-startup-message t)                         ;; No emacs logo
@@ -77,6 +78,15 @@
   (yank))
 (global-set-key "\C-x\C-d" 'duplicate-line)
 
+;; -----------------------------
+;; Use M-n to do "forward-up-list"
+(global-set-key (kbd "M-n") '(lambda ()
+			       (interactive)
+			       (backward-up-list)
+			       (evil-normal-state)
+			       (evil-jump-item)
+			       (evil-append 1)))
+
 (defun shell-command-on-buffer (cmd)
   (interactive "MCommand: ")
   (save-excursion
@@ -139,7 +149,6 @@
 (require 'key-chord)
 (key-chord-mode 1)
 (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
-(load-file "~/emacs-config/evil-surround/surround.el")
 (global-set-key "\M-;" 'evilnc-comment-or-uncomment-lines)
 (global-set-key "\M-:" 'evilnc-comment-or-uncomment-to-the-line)
 (global-set-key (kbd "C-c -") 'evil-numbers/inc-at-pt)
@@ -199,11 +208,6 @@
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
 (setq ack-and-a-half-executable "/usr/local/bin/ack")
 
-;; ======= helm
-(helm-mode 1)
-(global-set-key (kbd "M-o") 'find-file)
-(global-set-key (kbd "C-3") 'switch-to-buffer)
-
 ;; ======= magit
 (global-set-key (kbd "C-c C-v") 'magit-status)
 
@@ -252,3 +256,5 @@
 
 (global-company-mode t)
 (setq company-idle-delay t)
+(color-theme-monokai)
+(find-file "~/Dropbox/log.txt")
